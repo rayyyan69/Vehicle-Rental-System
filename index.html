@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DriveEasy | Vehicle Rental Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <header class="navbar">
+    <a href="#home" class="logo">Drive<span>Easy</span></a>
+    <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">&#9776;</button>
+    <nav id="navLinks" class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#vehicles">Vehicles</a>
+      <a href="#rent">Rent a Vehicle</a>
+      <a href="#bookings">My Bookings</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section id="home" class="hero">
+    <div class="hero-content fade-in">
+      <p class="hero-tag">Cars &bull; Bikes &bull; Trucks</p>
+      <h1>Rent the Right Ride for Every Journey</h1>
+      <p>Browse our fleet, pick your dates and book in under a minute. Demo project &mdash; no real payments.</p>
+      <div class="hero-buttons">
+        <a href="#vehicles" class="btn btn-primary">Browse Vehicles</a>
+        <a href="#bookings" class="btn btn-outline">My Bookings</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong id="statTotal">0</strong><span>Vehicles</span></div>
+        <div><strong id="statAvailable">0</strong><span>Available</span></div>
+        <div><strong id="statActive">0</strong><span>Active Rentals</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VEHICLES ===== -->
+  <section id="vehicles" class="section">
+    <h2 class="section-title">Our Vehicles</h2>
+    <p class="section-subtitle">Choose from our sample fleet of cars, bikes and trucks.</p>
+    <div class="filter-bar" id="vehicleFilters">
+      <button class="filter-btn active" data-type="All">All</button>
+      <button class="filter-btn" data-type="Car">Cars</button>
+      <button class="filter-btn" data-type="Bike">Bikes</button>
+      <button class="filter-btn" data-type="Truck">Trucks</button>
+    </div>
+    <div id="vehicleGrid" class="card-grid"></div>
+  </section>
+
+  <!-- ===== VIDEO ===== -->
+  <section id="video" class="section section-dark">
+    <h2 class="section-title">Explore Our Vehicles</h2>
+    <p class="section-subtitle">A quick look at the kind of rides you can rent.</p>
+    <div class="video-wrapper">
+      <video id="exploreVideo" controls preload="none"></video>
+      <!-- Shown only if the video cannot load -->
+      <img id="videoFallback" class="video-fallback"
+           src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=70"
+           alt="Vehicle preview">
+    </div>
+  </section>
+
+  <!-- ===== RENT FORM ===== -->
+  <section id="rent" class="section">
+    <h2 class="section-title">Rent a Vehicle</h2>
+    <p class="section-subtitle">Fill in the details below. The total updates automatically.</p>
+
+    <form id="rentForm" class="rent-form" novalidate>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="customerId">Customer ID</label>
+          <input type="text" id="customerId" readonly>
+        </div>
+        <div class="form-group">
+          <label for="vehicleSelect">Select Vehicle *</label>
+          <select id="vehicleSelect"></select>
+          <small class="error" id="errVehicle"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="customerName">Customer Name *</label>
+          <input type="text" id="customerName" placeholder="e.g. Anita Sharma" autocomplete="name">
+          <small class="error" id="errName"></small>
+        </div>
+        <div class="form-group">
+          <label for="customerPhone">Phone Number *</label>
+          <input type="tel" id="customerPhone" placeholder="10-digit mobile number" maxlength="10" autocomplete="tel">
+          <small class="error" id="errPhone"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="customerEmail">Email *</label>
+          <input type="email" id="customerEmail" placeholder="you@example.com" autocomplete="email">
+          <small class="error" id="errEmail"></small>
+        </div>
+        <div class="form-group">
+          <label for="licenceNumber">Driving Licence Number *</label>
+          <input type="text" id="licenceNumber" placeholder="e.g. KA0120200012345" maxlength="20">
+          <small class="error" id="errLicence"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="registrationNumber">Registration Number</label>
+          <input type="text" id="registrationNumber" readonly>
+        </div>
+        <div class="form-group">
+          <label for="pricePerDay">Rental Price Per Day (&#8377;)</label>
+          <input type="text" id="pricePerDay" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="startDate">Rental Start Date *</label>
+          <input type="date" id="startDate">
+          <small class="error" id="errDate"></small>
+        </div>
+        <div class="form-group">
+          <label for="rentalDays">Number of Days *</label>
+          <input type="number" id="rentalDays" min="1" max="90" value="1">
+          <small class="error" id="errDays"></small>
+        </div>
+      </div>
+
+      <div class="total-box">
+        <span>Total Rent = Price Per Day &times; Days</span>
+        <strong id="totalAmount">&#8377;0</strong>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Confirm Booking</button>
+        <button type="button" id="clearFormBtn" class="btn btn-ghost">Clear Form</button>
+      </div>
+      <p class="note">Only the details needed for a rental are collected. The licence number is checked for format only &mdash; it is not verified.</p>
+    </form>
+  </section>
+
+  <!-- ===== BOOKINGS ===== -->
+  <section id="bookings" class="section section-light">
+    <h2 class="section-title">My Bookings</h2>
+    <p class="section-subtitle">Your rental history. Return a vehicle when you are done.</p>
+    <div class="filter-bar" id="bookingFilters">
+      <button class="filter-btn active" data-status="All">All</button>
+      <button class="filter-btn" data-status="Active">Active</button>
+      <button class="filter-btn" data-status="Returned">Returned</button>
+    </div>
+    <div id="bookingList" class="booking-list"></div>
+    <div class="center">
+      <button id="resetDataBtn" class="btn btn-ghost">Reset Demo Data</button>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="section">
+    <h2 class="section-title">About This Project</h2>
+    <p class="about-text">
+      DriveEasy is a <strong>Vehicle Rental Management System</strong> built as a frontend student project.
+      It shows how a small rental business could manage:
+    </p>
+    <div class="about-grid">
+      <div class="about-card"><span>&#128663;</span><h3>Vehicle Information</h3><p>Name, brand, type, model, registration and price.</p></div>
+      <div class="about-card"><span>&#128100;</span><h3>Customer Details</h3><p>Auto-generated customer IDs with basic contact info.</p></div>
+      <div class="about-card"><span>&#128197;</span><h3>Rental Bookings</h3><p>Book, view and return vehicles with a full history.</p></div>
+      <div class="about-card"><span>&#9989;</span><h3>Availability</h3><p>Rented vehicles cannot be booked again until returned.</p></div>
+      <div class="about-card"><span>&#129518;</span><h3>Rental Calculation</h3><p>Total = price per day &times; number of days.</p></div>
+    </div>
+    <p class="note center">Demo only: data is saved in your browser's localStorage, which is not a secure database. No real bookings, payments or licence verification happen here.</p>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h3>Drive<span>Easy</span></h3>
+        <p>Vehicle Rental Management System &mdash; a demo project.</p>
+      </div>
+      <div>
+        <h4>Contact (sample)</h4>
+        <p>&#128205; 12 MG Road, Bengaluru, Karnataka</p>
+        <p>&#128222; +91 98765 43210</p>
+        <p>&#9993; hello@driveeasy.example</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <p><a href="#vehicles">Vehicles</a></p>
+        <p><a href="#rent">Rent a Vehicle</a></p>
+        <p><a href="#bookings">My Bookings</a></p>
+      </div>
+    </div>
+    <p class="copyright">&copy; 2026 DriveEasy. Fictional business for learning purposes.</p>
+  </footer>
+
+  <!-- ===== CONFIRMATION MODAL ===== -->
+  <div id="confirmModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-check">&#10003;</div>
+      <h2>Booking Confirmed!</h2>
+      <div id="confirmDetails" class="confirm-details"></div>
+      <div class="form-actions">
+        <a href="#bookings" id="viewBookingsBtn" class="btn btn-primary">View My Bookings</a>
+        <button id="closeModalBtn" class="btn btn-ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Small message that appears at the bottom of the screen -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
